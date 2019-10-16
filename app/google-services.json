@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "589021402307",
+    "firebase_url": "https://juber-96771.firebaseio.com",
+    "project_id": "juber-96771",
+    "storage_bucket": "juber-96771.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589021402307:android:f02c8067cf41d54a1e7e76",
+        "android_client_info": {
+          "package_name": "com.shakib.juber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589021402307-5op6vinsgbkpb51magrq7hq3oac8j0d6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shakib.juber",
+            "certificate_hash": "6ca15f32c31dc2fe64721d9f4f4d8a37b151d093"
+          }
+        },
+        {
+          "client_id": "589021402307-b3v40g5flqs2cm3k50h3dt8rui700oge.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARkLSgmw8yesYBgoRrgdltX9BLdJfwFAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589021402307-b3v40g5flqs2cm3k50h3dt8rui700oge.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">JUber</string>
+    <string name="api_key">AIzaSyDGw7DlwoGaXEvECEN-G7kGkMj0lyQ3ADs</string>
+    <string name="title_activity_driver_map">Map</string>
+</resources>
