@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PassengerSettingsActivity"></activity>
+        <activity android:name=".DriverSettingsActivity"></activity>
+        <activity android:name=".PassengerSettingsActivity" />
         <activity android:name=".PassengerMapActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

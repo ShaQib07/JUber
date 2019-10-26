@@ -13,8 +13,12 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
@@ -42,16 +46,19 @@ import java.util.Map;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
-    private Button mLogOut;
+    private Button mLogOut, mSettings;
     private GoogleMap mMap;
     private String passengerId = "";
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    LocationRequest mLocationRequest;
-    SupportMapFragment mapFragment;
+    private LinearLayout mPassengerInfo;
+    private ImageView mPassengerProfileImage;
+    private TextView mPassengerName, mPassengerPhone, mPassengerDestination;
 
     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+    GoogleApiClient mGoogleApiClient;
+    Location mLastLocation;
+    LocationRequest mLocationRequest;
+    private SupportMapFragment mapFragment;
 
     DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.DRIVERS_AVAILABLE);
     DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.DRIVERS_WORKING);
@@ -72,7 +79,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             mapFragment.getMapAsync(this);
         }
 
+        mPassengerInfo = findViewById(R.id.passenger_info);
+
+        mPassengerProfileImage = findViewById(R.id.passenger_profile_img);
+
+        mPassengerName = findViewById(R.id.passenger_name);
+        mPassengerPhone = findViewById(R.id.passenger_phone);
+        mPassengerDestination = findViewById(R.id.passenger_destination);
+
         mLogOut = findViewById(R.id.logout_btn);
+        mSettings = findViewById(R.id.settings_btn);
+
         mLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,18 +99,26 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        mSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DriverMapActivity.this, DriverSettingsActivity.class));
+            }
+        });
         getAssignedPassenger();
     }
 
     private void getAssignedPassenger() {
         String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assignedPassengerRef = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.USERS).child(FirebaseEndPoints.DRIVERS).child(driverId).child(FirebaseEndPoints.PASSENGER_RIDE_ID);
+        DatabaseReference assignedPassengerRef = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.USERS).child(FirebaseEndPoints.DRIVERS).child(driverId).child(FirebaseEndPoints.PASSENGER_REQUEST).child(FirebaseEndPoints.PASSENGER_RIDE_ID);
         assignedPassengerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     passengerId = dataSnapshot.getValue().toString();
                     getAssignedPassengerPickupLocation();
+                    getAssignedPassengerInfo();
+                    getAssignedPassengerDestination();
                 } else {
                     passengerId = "";
                     if (mPickupLocationMarker != null){
@@ -101,6 +126,62 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     }
                     if (assignedPassengerPickupRequestRefListener != null){
                         assignedPassengerPickupRequestRef.removeEventListener(assignedPassengerPickupRequestRefListener);
+                    }
+                    mPassengerInfo.setVisibility(View.GONE);
+                    mPassengerName.setText("");
+                    mPassengerPhone.setText("");
+                    mPassengerDestination.setText("Destination: --");
+                    mPassengerProfileImage.setImageResource(R.drawable.ic_account);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getAssignedPassengerDestination() {
+        String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assignedPassengerDestinationRef = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.USERS).child(FirebaseEndPoints.DRIVERS).child(driverId).child(FirebaseEndPoints.PASSENGER_REQUEST).child(FirebaseEndPoints.DESTINATION);
+        assignedPassengerDestinationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    String destination = dataSnapshot.getValue().toString();
+                    mPassengerDestination.setText("Destination: "+destination);
+                } else {
+                    mPassengerDestination.setText("Destination: Not selected");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getAssignedPassengerInfo() {
+        mPassengerInfo.setVisibility(View.VISIBLE);
+        DatabaseReference mPassengerDatabase = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.USERS).child(FirebaseEndPoints.PASSENGERS).child(passengerId);
+        mPassengerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                    if (map.get("Name") != null){ ;
+                        mPassengerName.setText(map.get("Name").toString());
+                    }
+                    if (map.get("Phone") != null){
+                        mPassengerPhone.setText(map.get("Phone").toString());
+                    }
+                    if (map.get("ProfileImageUrl") != null){
+                        Glide.with(getApplication())
+                                .load(map.get("ProfileImageUrl").toString())
+                                .into(mPassengerProfileImage);
                     }
                 }
             }

@@ -35,16 +35,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PassengerSettingsActivity extends AppCompatActivity {
-
-    private EditText mNameField, mPhoneField;
+public class DriverSettingsActivity extends AppCompatActivity {
+    private EditText mNameField, mPhoneField, mCarField;
     private ImageView mProfileImage;
     private Button mDiscard, mConfirm;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mPassengerDatabase;
+    private DatabaseReference mDriversDatabase;
 
-    private String userID, mName, mPhone, mProfileImageUrl;
+    private String userID, mName, mPhone, mCar, mProfileImageUrl;
 
     private Uri resultUri;
 
@@ -55,6 +54,8 @@ public class PassengerSettingsActivity extends AppCompatActivity {
 
         mNameField = findViewById(R.id.name_et);
         mPhoneField = findViewById(R.id.phone_et);
+        mCarField = findViewById(R.id.car_et);
+        mCarField.setVisibility(View.VISIBLE);
 
         mProfileImage = findViewById(R.id.profile_img);
 
@@ -64,7 +65,7 @@ public class PassengerSettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
 
-        mPassengerDatabase = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.USERS).child(FirebaseEndPoints.PASSENGERS).child(userID);
+        mDriversDatabase = FirebaseDatabase.getInstance().getReference(FirebaseEndPoints.USERS).child(FirebaseEndPoints.DRIVERS).child(userID);
 
         getUserInfo();
 
@@ -94,7 +95,7 @@ public class PassengerSettingsActivity extends AppCompatActivity {
     }
 
     private void getUserInfo() {
-        mPassengerDatabase.addValueEventListener(new ValueEventListener() {
+        mDriversDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
@@ -106,6 +107,10 @@ public class PassengerSettingsActivity extends AppCompatActivity {
                     if (map.get("Phone") != null){
                         mPhone = map.get("Phone").toString();
                         mPhoneField.setText(mPhone);
+                    }
+                    if (map.get("Car") != null){
+                        mCar = map.get("Car").toString();
+                        mCarField.setText(mCar);
                     }
                     if (map.get("ProfileImageUrl") != null){
                         mProfileImageUrl = map.get("ProfileImageUrl").toString();
@@ -126,12 +131,14 @@ public class PassengerSettingsActivity extends AppCompatActivity {
     private void saveUserInformation() {
         mName = mNameField.getText().toString();
         mPhone = mPhoneField.getText().toString();
+        mCar = mCarField.getText().toString();
 
         Map userInfo = new HashMap();
         userInfo.put("Name", mName);
         userInfo.put("Phone", mPhone);
+        userInfo.put("Car", mCar);
 
-        mPassengerDatabase.updateChildren(userInfo);
+        mDriversDatabase.updateChildren(userInfo);
 
         if (resultUri != null){
             StorageReference filepath = FirebaseStorage.getInstance().getReference("Profile_images").child(userID);
@@ -151,7 +158,7 @@ public class PassengerSettingsActivity extends AppCompatActivity {
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(PassengerSettingsActivity.this, "Oops! Image upload failed...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DriverSettingsActivity.this, "Oops! Image upload failed...", Toast.LENGTH_SHORT).show();
 
                     finish();
                 }
@@ -166,15 +173,15 @@ public class PassengerSettingsActivity extends AppCompatActivity {
 
                     Map newImage = new HashMap();
                     newImage.put("ProfileImageUrl", downloadUrl.toString());
-                    mPassengerDatabase.updateChildren(newImage);
+                    mDriversDatabase.updateChildren(newImage);
 
-                    Toast.makeText(PassengerSettingsActivity.this, "||Profile updated successfully||", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DriverSettingsActivity.this, "||Profile updated successfully||", Toast.LENGTH_SHORT).show();
 
                     finish();
                 }
             });
         } else {
-            Toast.makeText(PassengerSettingsActivity.this, "||Profile updated successfully||", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DriverSettingsActivity.this, "||Profile updated successfully||", Toast.LENGTH_SHORT).show();
 
             finish();
         }

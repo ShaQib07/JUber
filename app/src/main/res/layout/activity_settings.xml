@@ -41,6 +41,16 @@
         android:hint="Phone"
         android:inputType="phone"/>
 
+    <EditText
+        android:id="@+id/car_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Car"
+        android:visibility="gone"/>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

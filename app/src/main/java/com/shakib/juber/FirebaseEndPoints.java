@@ -1,13 +1,15 @@
 package com.shakib.juber;
 
-public class FirebaseEndPoints {
-    public static final String USERS = "Users";
-    public static final String DRIVERS = "Drivers";
-    public static final String PASSENGERS = "Passengers";
-    public static final String DRIVERS_AVAILABLE = "DriversAvailable";
-    public static final String DRIVERS_WORKING = "DriversWorking";
-    public static final String PICKUP_REQUEST = "PickupRequest";
-    public static final String PASSENGER_RIDE_ID = "PassengerRideId";
+class FirebaseEndPoints {
+    static final String USERS = "Users";
+    static final String DRIVERS = "Drivers";
+    static final String PASSENGERS = "Passengers";
+    static final String DRIVERS_AVAILABLE = "DriversAvailable";
+    static final String DRIVERS_WORKING = "DriversWorking";
+    static final String PICKUP_REQUEST = "PickupRequest";
+    static final String PASSENGER_RIDE_ID = "PassengerRideId";
+    static final String PASSENGER_REQUEST = "PassengerRequest";
+    static final String DESTINATION = "Destination";
 
 
 }
