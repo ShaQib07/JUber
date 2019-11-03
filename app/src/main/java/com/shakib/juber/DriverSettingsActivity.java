@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -39,11 +41,12 @@ public class DriverSettingsActivity extends AppCompatActivity {
     private EditText mNameField, mPhoneField, mCarField;
     private ImageView mProfileImage;
     private Button mDiscard, mConfirm;
+    private RadioGroup mRadioGroup;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDriversDatabase;
 
-    private String userID, mName, mPhone, mCar, mProfileImageUrl;
+    private String userID, mName, mPhone, mCar, mService, mProfileImageUrl;
 
     private Uri resultUri;
 
@@ -56,6 +59,9 @@ public class DriverSettingsActivity extends AppCompatActivity {
         mPhoneField = findViewById(R.id.phone_et);
         mCarField = findViewById(R.id.car_et);
         mCarField.setVisibility(View.VISIBLE);
+
+        mRadioGroup = findViewById(R.id.radio_group);
+        mRadioGroup.setVisibility(View.VISIBLE);
 
         mProfileImage = findViewById(R.id.profile_img);
 
@@ -112,6 +118,20 @@ public class DriverSettingsActivity extends AppCompatActivity {
                         mCar = map.get("Car").toString();
                         mCarField.setText(mCar);
                     }
+                    if (map.get("Service") != null){
+                        mService = map.get("Service").toString();
+                        switch (mService){
+                            case "Uber X":
+                                mRadioGroup.check(R.id.uber_x);
+                                break;
+                            case "Uber Black":
+                                mRadioGroup.check(R.id.uber_black);
+                                break;
+                            case "Uber XL":
+                                mRadioGroup.check(R.id.uber_xl);
+                                break;
+                        }
+                    }
                     if (map.get("ProfileImageUrl") != null){
                         mProfileImageUrl = map.get("ProfileImageUrl").toString();
                         Glide.with(getApplication())
@@ -133,10 +153,21 @@ public class DriverSettingsActivity extends AppCompatActivity {
         mPhone = mPhoneField.getText().toString();
         mCar = mCarField.getText().toString();
 
+        int selectedId = mRadioGroup.getCheckedRadioButtonId();
+
+        final RadioButton radioButton = findViewById(selectedId);
+
+        if (radioButton.getText() == null){
+            mService = "Uber X";
+        }
+
+        mService = radioButton.getText().toString();
+
         Map userInfo = new HashMap();
         userInfo.put("Name", mName);
         userInfo.put("Phone", mPhone);
         userInfo.put("Car", mCar);
+        userInfo.put("Service", mService);
 
         mDriversDatabase.updateChildren(userInfo);
 

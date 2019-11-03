@@ -50,6 +50,35 @@
         android:hint="Car"
         android:visibility="gone"/>
 
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/uber_x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Uber X"/>
+
+        <RadioButton
+            android:id="@+id/uber_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Uber Black"/>
+
+        <RadioButton
+            android:id="@+id/uber_xl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Uber XL"/>
+
+    </RadioGroup>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"

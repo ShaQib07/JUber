@@ -54,7 +54,8 @@
             android:id="@+id/driver_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="horizontal"
             android:background="@color/semiTransparent"
             android:visibility="gone">
@@ -110,6 +111,39 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            android:background="@color/semiTransparent"
+            android:gravity="center_horizontal">
+
+            <RadioButton
+                android:id="@+id/uber_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="Uber X"/>
+
+            <RadioButton
+                android:id="@+id/uber_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="Uber Black"/>
+
+            <RadioButton
+                android:id="@+id/uber_xl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="Uber XL"/>
+
+        </RadioGroup>
 
         <Button
             android:id="@+id/request_btn"
